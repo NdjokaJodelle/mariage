@@ -1,0 +1,282 @@
+{
+  "ADMIN001": {
+    "name": "Administrateur",
+    "role": "admin",
+    "table": 1
+  },
+  "GUEST001": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST002": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST003": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST004": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST005": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST006": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST007": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST008": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST009": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST010": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST011": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST012": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST013": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST014": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST015": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST016": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST017": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST018": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST019": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST020": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST021": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST022": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST023": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST024": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST025": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST026": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST027": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST028": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST029": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST030": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST031": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST032": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST033": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST034": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST035": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST036": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST037": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST038": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST039": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST040": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST041": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST042": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST043": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST044": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST045": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST046": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST047": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST048": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST049": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST050": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST051": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST052": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST053": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  },
+  "GUEST054": {
+    "name": "Jean Dupont",
+    "role": "guest",
+    "table": 5
+  },
+  "GUEST055": {
+    "name": "Marie Martin",
+    "role": "guest",
+    "table": 3
+  }
+}
