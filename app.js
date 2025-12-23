@@ -1,5 +1,7 @@
+// /mariage/app.js
+
 // Configuration des onglets disponibles
- const TABS_CONFIG = {
+const TABS_CONFIG = {
     // Onglets pour tous les invités
     common: [
         {
@@ -38,7 +40,7 @@
             page: 'info.html'
         }
     ],
-    // Onglets pour les administrateurs
+    // Onglets SUPPLÉMENTAIRES pour les administrateurs
     admin: [
         {
             id: 'ordre_jour',
@@ -89,42 +91,71 @@
     ]
 };
 
+// Variable globale pour stocker les utilisateurs
+let USERS_DB = null;
+
+// Fonction pour charger les utilisateurs
 async function loadUsers() {
     try {
+        console.log('🔄 Chargement des utilisateurs...');
         const response = await fetch('utilisateur.json', {
-            cache: "no-store" // évite les problèmes de cache en développement
+            cache: "no-store"
         });
 
         if (!response.ok) {
-            throw new Error("Impossible de charger utilisateur.json");
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log('✅ Utilisateurs chargés:', data);
+        return data;
     } catch (error) {
-        console.error(error);
-        document.body.innerHTML = "<h2>Erreur de chargement des données</h2>";
-        return null;
+        console.error('❌ Erreur de chargement:', error);
+        
+        // Fallback : base de données de test intégrée
+        console.warn('⚠️ Utilisation de la base de données de test');
+        return {
+            'ADMIN001': {
+                name: 'Administrateur Principal',
+                role: 'admin',
+                table: 1
+            },
+            'GUEST001': {
+                name: 'Jean Dupont',
+                role: 'guest',
+                table: 5
+            },
+            'GUEST002': {
+                name: 'Marie Martin',
+                role: 'guest',
+                table: 3
+            }
+        };
     }
 }
-
-// Base de données simulée des utilisateurs (À REMPLACER PAR FIREBASE)
-const USERS_DB = await loadUsers();
 
 // Fonction pour extraire le token depuis l'URL
 function getTokenFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('token');
+    const token = urlParams.get('token');
+    console.log('🔑 Token détecté:', token);
+    return token;
 }
 
 // Fonction pour valider et récupérer le profil utilisateur
 function authenticateUser(token) {
-    // Simulation de validation (À REMPLACER PAR APPEL FIREBASE)
-    if (USERS_DB[token]) {
+    console.log('🔐 Authentification pour:', token);
+    console.log('📊 Base de données:', USERS_DB);
+    
+    if (USERS_DB && USERS_DB[token]) {
+        console.log('✅ Utilisateur trouvé:', USERS_DB[token]);
         return {
             success: true,
             user: USERS_DB[token]
         };
     }
+    
+    console.log('❌ Utilisateur non trouvé');
     return {
         success: false,
         error: 'QR Code invalide ou expiré'
@@ -133,18 +164,35 @@ function authenticateUser(token) {
 
 // Fonction pour générer les onglets selon le profil
 function generateTabs(userRole) {
-    const tabs = [...TABS_CONFIG.common];
+    console.log('🎨 Génération des onglets pour le rôle:', userRole);
     
-    if (userRole === 'admin') {
-        tabs.push(...TABS_CONFIG.admin);
+    // Tous les utilisateurs ont les onglets communs
+    let tabs;
+    
+   if (userRole === 'admin') {
+        // Remplacement TOTAL par les onglets admin
+        tabs = [...TABS_CONFIG.admin];
+        console.log('👑 Onglets admin UNIQUEMENT');
+    } else {
+        // Utilisateurs normaux → onglets communs
+        tabs = [...TABS_CONFIG.common];
     }
     
+    console.log('📋 Total onglets:', tabs.length);
     return tabs;
 }
 
 // Fonction pour afficher les onglets
 function renderTabs(tabs) {
+    console.log('🎭 Affichage de', tabs.length, 'onglets');
+    
     const navContainer = document.getElementById('navigation');
+    
+    if (!navContainer) {
+        console.error('❌ Container navigation non trouvé!');
+        return;
+    }
+    
     navContainer.innerHTML = '';
     
     tabs.forEach(tab => {
@@ -163,19 +211,38 @@ function renderTabs(tabs) {
     });
     
     navContainer.style.display = 'grid';
+    console.log('✅ Onglets affichés');
 }
 
 // Fonction pour afficher une erreur
 function showError(message) {
+    console.error('💥', message);
     const errorDiv = document.getElementById('error');
-    errorDiv.textContent = message;
-    errorDiv.style.display = 'block';
-    document.getElementById('loading').style.display = 'none';
+    const loadingDiv = document.getElementById('loading');
+    
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+    
+    if (loadingDiv) {
+        loadingDiv.style.display = 'none';
+    }
 }
 
 // Initialisation de l'application
 async function initApp() {
+    console.log('🚀 Initialisation de l\'application...');
+    
     try {
+        // Étape 0 : Charger les utilisateurs
+        USERS_DB = await loadUsers();
+        
+        if (!USERS_DB) {
+            showError('❌ Impossible de charger la base de données des utilisateurs');
+            return;
+        }
+        
         // Étape 1 : Récupérer le token
         const token = getTokenFromURL();
         
@@ -193,27 +260,45 @@ async function initApp() {
         }
         
         const user = authResult.user;
+        console.log('👤 Utilisateur authentifié:', user);
         
         // Étape 3 : Sauvegarder la session
         sessionStorage.setItem('currentUser', JSON.stringify(user));
         sessionStorage.setItem('authToken', token);
-                
+        console.log('💾 Session sauvegardée');
+        
         // Étape 4 : Afficher le message de bienvenue
-        document.getElementById('userName').textContent = user.name;
-        document.getElementById('welcome').style.display = 'block';
-                
+        const userNameElement = document.getElementById('userName');
+        const welcomeElement = document.getElementById('welcome');
+        
+        if (userNameElement) {
+            userNameElement.textContent = user.name;
+        }
+        
+        if (welcomeElement) {
+            welcomeElement.style.display = 'block';
+        }
+        
         // Étape 5 : Générer et afficher les onglets
         const tabs = generateTabs(user.role);
         renderTabs(tabs);
-                
+        
         // Cacher le chargement
-        document.getElementById('loading').style.display = 'none';
-                
+        const loadingDiv = document.getElementById('loading');
+        if (loadingDiv) {
+            loadingDiv.style.display = 'none';
+        }
+        
+        console.log('🎉 Application initialisée avec succès!');
+        
     } catch (error) {
-        console.error('Erreur d\'initialisation:', error);
+        console.error('💥 Erreur d\'initialisation:', error);
         showError('❌ Une erreur est survenue. Veuillez réessayer.');
     }
 }
 
 // Lancer l'application au chargement de la page
-window.addEventListener('DOMContentLoaded', initApp);
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('📄 DOM chargé, lancement de l\'app...');
+    initApp();
+});

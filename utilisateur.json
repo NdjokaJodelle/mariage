@@ -2,281 +2,282 @@
   "ADMIN001": {
     "name": "Administrateur",
     "role": "admin",
-    "table": 1
+    "image": 1
   },
   "GUEST001": {
-    "name": "Jean Dupont",
+    "name": "Aconite",
     "role": "guest",
-    "table": 5
+    "image": "aconite.webp"
   },
   "GUEST002": {
-    "name": "Marie Martin",
+    "name": "Anémone de pavot",
     "role": "guest",
-    "table": 3
+    "image": "anemone_de_pavot.webp"
   },
   "GUEST003": {
-    "name": "Jean Dupont",
+    "name": "Camélia",
     "role": "guest",
-    "table": 5
+    "image": "camelia.webp"
   },
   "GUEST004": {
-    "name": "Marie Martin",
+    "name": "Dahlia",
     "role": "guest",
-    "table": 3
+    "image": "dahlia.webp"
   },
   "GUEST005": {
-    "name": "Jean Dupont",
+    "name": "Faux-chervis",
     "role": "guest",
-    "table": 5
+    "image": "faux_chervis.webp"
   },
   "GUEST006": {
-    "name": "Marie Martin",
+    "name": "Fleur de lune",
     "role": "guest",
-    "table": 3
+    "image": "fleur_de_lune.webp"
   },
   "GUEST007": {
-    "name": "Jean Dupont",
+    "name": "Fleur de mai",
     "role": "guest",
-    "table": 5
+    "image": "fleur_de_mai.webp"
   },
   "GUEST008": {
-    "name": "Marie Martin",
+    "name": "Forsythia",
     "role": "guest",
-    "table": 3
+    "image": "forsythia.webp"
   },
   "GUEST009": {
-    "name": "Jean Dupont",
+    "name": "Frangipanier",
     "role": "guest",
-    "table": 5
+    "image": "frangipanier.webp"
   },
   "GUEST010": {
-    "name": "Marie Martin",
+    "name": "Gardénia",
     "role": "guest",
-    "table": 3
+    "image": "gardenia.webp"
   },
   "GUEST011": {
-    "name": "Jean Dupont",
+    "name": "Gerbera",
     "role": "guest",
-    "table": 5
+    "image": "gerbera.webp"
   },
   "GUEST012": {
-    "name": "Marie Martin",
+    "name": "Ixora",
     "role": "guest",
-    "table": 3
+    "image": "ixora.webp"
   },
   "GUEST013": {
-    "name": "Jean Dupont",
+    "name": "Lauriers des montagnes",
     "role": "guest",
-    "table": 5
+    "image": "lauriers_des_montagnes.webp"
   },
   "GUEST014": {
-    "name": "Marie Martin",
+    "name": "Marguerite Shasta",
     "role": "guest",
-    "table": 3
+    "image": "marguerite_shasta.webp"
   },
   "GUEST015": {
-    "name": "Jean Dupont",
+    "name": "Mimosa",
     "role": "guest",
-    "table": 5
+    "image": "mimosa.webp"
   },
   "GUEST016": {
-    "name": "Marie Martin",
+    "name": "Muscari",
     "role": "guest",
-    "table": 3
+    "image": "muscari.webp"
   },
   "GUEST017": {
-    "name": "Jean Dupont",
+    "name": "Myosotis",
     "role": "guest",
-    "table": 5
+    "image": "myosotis.webp"
   },
   "GUEST018": {
-    "name": "Marie Martin",
+    "name": "Némésie",
     "role": "guest",
-    "table": 3
+    "image": "nemesie.webp"
   },
   "GUEST019": {
-    "name": "Jean Dupont",
+    "name": "Nemophile",
     "role": "guest",
-    "table": 5
+    "image": "nemophile.webp"
   },
   "GUEST020": {
-    "name": "Marie Martin",
+    "name": "Œillet de poète",
     "role": "guest",
-    "table": 3
+    "image": "oeillet_de_poete.webp"
   },
   "GUEST021": {
-    "name": "Jean Dupont",
+    "name": "Orchidée",
     "role": "guest",
-    "table": 5
+    "image": "orchidée.webp"
   },
   "GUEST022": {
-    "name": "Marie Martin",
+    "name": "Pétunia",
     "role": "guest",
-    "table": 3
+    "image": "pétunia.webp"
   },
   "GUEST023": {
-    "name": "Jean Dupont",
+    "name": "Photinie",
     "role": "guest",
-    "table": 5
+    "image": "photinie.webp"
   },
   "GUEST024": {
-    "name": "Marie Martin",
+    "name": "Pivoine",
     "role": "guest",
-    "table": 3
+    "image": "pivoine.webp"
   },
   "GUEST025": {
-    "name": "Jean Dupont",
+    "name": "Plumbago",
     "role": "guest",
-    "table": 5
+    "image": "plumbago.webp"
   },
   "GUEST026": {
-    "name": "Marie Martin",
+    "name": "Poinsettia",
     "role": "guest",
-    "table": 3
+    "image": "poinsettia.webp"
   },
   "GUEST027": {
-    "name": "Jean Dupont",
+    "name": "Primevère",
     "role": "guest",
-    "table": 5
+    "image": "primevere.webp"
   },
   "GUEST028": {
-    "name": "Marie Martin",
+    "name": "Renoncule persane",
     "role": "guest",
-    "table": 3
+    "image": "renoncule_persane.webp"
   },
   "GUEST029": {
-    "name": "Jean Dupont",
+    "name": "Rose",
     "role": "guest",
-    "table": 5
+    "image": "rose.webp"
   },
   "GUEST030": {
-    "name": "Marie Martin",
+    "name": "Sureau",
     "role": "guest",
-    "table": 3
+    "image": "sureau.webp"
   },
   "GUEST031": {
-    "name": "Jean Dupont",
+    "name": "Verge d’or",
     "role": "guest",
-    "table": 5
+    "image": "verge_d_or.webp"
   },
   "GUEST032": {
-    "name": "Marie Martin",
+    "name": "Vergerette",
     "role": "guest",
-    "table": 3
+    "image": "vergerette.webp"
   },
   "GUEST033": {
-    "name": "Marie Martin",
+    "name": "Viorne",
     "role": "guest",
-    "table": 3
+    "image": "viorne.webp"
   },
   "GUEST034": {
-    "name": "Jean Dupont",
+    "name": "Xérophylle tenace",
     "role": "guest",
-    "table": 5
+    "image": "xerophylle_tenace.webp"
   },
   "GUEST035": {
-    "name": "Marie Martin",
+    "name": "Alysse",
     "role": "guest",
-    "table": 3
+    "image": "alysse.webp" 
   },
   "GUEST036": {
-    "name": "Jean Dupont",
+    "name": "Eschscholtzia",
     "role": "guest",
-    "table": 5
+    "image": "eschscholtzia.webp"
   },
   "GUEST037": {
-    "name": "Marie Martin",
+    "name": "Freesia",
     "role": "guest",
-    "table": 3
+    "image": "freesia.webp"
   },
   "GUEST038": {
-    "name": "Jean Dupont",
+    "name": "Iris",
     "role": "guest",
-    "table": 5
+    "image": "iris.webp"
   },
   "GUEST039": {
-    "name": "Marie Martin",
+    "name": "Jacinthe",
     "role": "guest",
-    "table": 3
+    "image": "jacinthe.webp"
   },
   "GUEST040": {
-    "name": "Jean Dupont",
+    "name": "Rose rouge",
     "role": "guest",
-    "table": 5
+    "image": "rose_rouge.webp"
   },
   "GUEST041": {
-    "name": "Marie Martin",
+    "name": "Calendula",
     "role": "guest",
-    "table": 3
+    "image": "calendula.webp"
   },
   "GUEST042": {
-    "name": "Jean Dupont",
+    "name": "Tagète",
     "role": "guest",
-    "table": 5
+    "image": "tagete.webp"
   },
   "GUEST043": {
-    "name": "Marie Martin",
+    "name": "Véronique",
     "role": "guest",
-    "table": 3
+    "image": "veronique.webp"
   },
   "GUEST044": {
-    "name": "Jean Dupont",
+    "name": "Weigela",
     "role": "guest",
-    "table": 5
+    "image": "weigela.webp"
   },
   "GUEST045": {
-    "name": "Marie Martin",
+    "name": "Zantedeschia",
     "role": "guest",
-    "table": 3
+    "image": "zantedeschia.webp"
   },
   "GUEST046": {
-    "name": "Jean Dupont",
+    "name": "Azalée",
     "role": "guest",
-    "table": 5
+    "image": "azalee.webp"
+
   },
   "GUEST047": {
-    "name": "Marie Martin",
+    "name": "Aster",
     "role": "guest",
-    "table": 3
+    "image": "aster.webp"
   },
   "GUEST048": {
-    "name": "Jean Dupont",
+    "name": "Hémérocalle",
     "role": "guest",
-    "table": 5
+    "image": "hemerocalle.webp"
   },
   "GUEST049": {
-    "name": "Marie Martin",
+    "name": "Helianthus",
     "role": "guest",
-    "table": 3
+    "image": "helianthus.webp"
   },
   "GUEST050": {
-    "name": "Jean Dupont",
+    "name": "Incarvillea",
     "role": "guest",
-    "table": 5
+    "image": "incarvillea.webp"
   },
   "GUEST051": {
-    "name": "Marie Martin",
+    "name": "Jovellana",
     "role": "guest",
-    "table": 3
+    "image": "jovellana.webp"
   },
   "GUEST052": {
-    "name": "Jean Dupont",
+    "name": "Myrtille",
     "role": "guest",
-    "table": 5
+    "image": "myrtille.webp"
   },
   "GUEST053": {
-    "name": "Marie Martin",
+    "name": "Napier Grass",
     "role": "guest",
-    "table": 3
+    "image": "napier_grass.webp"
   },
   "GUEST054": {
-    "name": "Jean Dupont",
-    "role": "guest",
-    "table": 5
+    "name": "Primule",
+    "role": "guest",    
+    "image": "primule.webp"
   },
   "GUEST055": {
-    "name": "Marie Martin",
+    "name": "Pomme de terre",
     "role": "guest",
-    "table": 3
+    "image": "pomme_de_terre.webp"
   }
 }
