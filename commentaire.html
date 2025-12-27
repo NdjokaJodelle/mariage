@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livre d'Or - Mariage</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        /* Formulaire d'identification */
+        .auth-form {
+            max-width: 500px;
+            margin: 50px auto;
+            background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--gold);
+        }
+
+        .auth-form h2 {
+            color: var(--royal-blue);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        /* Zone de commentaire */
+        .comment-form {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-gold) 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--gold);
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--dark-blue) 100%);
+            color: var(--white);
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Liste des commentaires */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .comment-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--gold);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--royal-blue), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0, 71, 171, 0.3);
+        }
+
+        .comment-author-name {
+            font-weight: bold;
+            color: var(--royal-blue);
+            font-size: 1.1em;
+        }
+
+        .comment-time {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        .comment-message {
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        .delete-comment-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+
+        .delete-comment-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .no-comments-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .char-counter {
+            text-align: right;
+            color: var(--text-light);
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--white);
+            color: var(--royal-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">💬</div>
+            <h1>Livre d'Or</h1>
+            <p class="subtitle">Partagez vos vœux et messages avec les mariés</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <!-- Formulaire d'identification (première connexion) -->
+        <div id="authSection" style="display: none;">
+            <div class="auth-form">
+                <h2>✨ Bienvenue !</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 25px;">
+                    Pour laisser un message, merci de vous identifier
+                </p>
+
+                <div class="form-group">
+                    <label for="authNom">Votre nom complet</label>
+                    <input type="text" id="authNom" placeholder="Ex: Marie Dupont" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="authEmail">Votre adresse email</label>
+                    <input type="email" id="authEmail" placeholder="Ex: marie@example.com" required>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%;" onclick="registerUser()">
+                    ✅ S'identifier
+                </button>
+            </div>
+        </div>
+
+        <!-- Section principale (après connexion) -->
+        <div id="mainSection" style="display: none;">
+            <!-- Info utilisateur connecté -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="user-info">
+                    <span>👤</span>
+                    <span id="userName"></span>
+                    <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+                </div>
+            </div>
+
+            <!-- Formulaire de commentaire -->
+            <div class="comment-form">
+                <h3 style="color: var(--royal-blue); margin-bottom: 15px;">✍️ Laissez votre message</h3>
+                
+                <div class="form-group">
+                    <textarea 
+                        id="commentMessage" 
+                        placeholder="Écrivez vos vœux, souvenirs, ou un message pour les mariés..."
+                        maxlength="1000"></textarea>
+                    <div class="char-counter">
+                        <span id="charCount">0</span> / 1000 caractères
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%;" onclick="postComment()">
+                    💌 Envoyer le message
+                </button>
+            </div>
+
+            <!-- Liste des commentaires -->
+            <div class="content-card">
+                <h2 style="text-align: center; margin-bottom: 25px;">
+                    💬 Messages des invités (<span id="commentCount">0</span>)
+                </h2>
+                <div id="commentsList" class="comments-list">
+                    <div class="loading">Chargement des messages...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let isAdmin = false;
+        let refreshInterval = null;
+
+        // Compteur de caractères
+        const commentMessage = document.getElementById('commentMessage');
+        const charCount = document.getElementById('charCount');
+
+        if (commentMessage) {
+            commentMessage.addEventListener('input', () => {
+                charCount.textContent = commentMessage.value.length;
+            });
+        }
+
+        // Vérifier l'authentification générale
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            const userData = JSON.parse(user);
+            isAdmin = userData.role === 'admin';
+            return userData;
+        }
+
+        // Vérifier si l'utilisateur est déjà identifié pour les commentaires
+        async function checkCommentAuth() {
+            const savedUser = localStorage.getItem('commentUser');
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainSection();
+            } else {
+                showAuthSection();
+            }
+        }
+
+        // Afficher le formulaire d'identification
+        function showAuthSection() {
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('mainSection').style.display = 'none';
+        }
+
+        // Afficher la section principale
+        function showMainSection() {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('mainSection').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser.nom;
+            
+            loadComments();
+            startAutoRefresh();
+        }
+
+        // Enregistrer un utilisateur
+        async function registerUser() {
+            const nom = document.getElementById('authNom').value.trim();
+            const email = document.getElementById('authEmail').value.trim();
+
+            if (!nom || !email) {
+                alert('⚠️ Veuillez remplir tous les champs');
+                return;
+            }
+
+            // Validation email basique
+            if (!email.includes('@')) {
+                alert('⚠️ Veuillez entrer un email valide');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/invite/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nom, email })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.invite;
+                    
+                    // Sauvegarder dans localStorage
+                    localStorage.setItem('commentUser', JSON.stringify(currentUser));
+                    
+                    showMainSection();
+                } else {
+                    alert('❌ Erreur lors de l\'inscription');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion au serveur');
+            }
+        }
+
+        // Se déconnecter
+        function logout() {
+            if (confirm('Voulez-vous vous déconnecter ?')) {
+                localStorage.removeItem('commentUser');
+                currentUser = null;
+                window.location.reload();
+            }
+        }
+
+        // Poster un commentaire
+        async function postComment() {
+            const message = commentMessage.value.trim();
+
+            if (!message) {
+                alert('⚠️ Veuillez écrire un message');
+                return;
+            }
+
+            if (message.length > 1000) {
+                alert('⚠️ Message trop long (max 1000 caractères)');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/commentaires/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nom: currentUser.nom,
+                        message: message
+                    })
+                });
+
+                if (response.ok) {
+                    commentMessage.value = '';
+                    charCount.textContent = '0';
+                    await loadComments();
+                    
+                    // Scroll vers le bas pour voir le nouveau commentaire
+                    setTimeout(() => {
+                        const commentsList = document.getElementById('commentsList');
+                        commentsList.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                } else {
+                    alert('❌ Erreur lors de l\'envoi');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        // Charger les commentaires
+        async function loadComments() {
+            try {
+                const response = await fetch('/api/commentaires', {
+                    cache: "no-store"
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayComments(data.commentaires);
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Afficher les commentaires
+        function displayComments(comments) {
+            const commentsList = document.getElementById('commentsList');
+            const commentCount = document.getElementById('commentCount');
+
+            commentCount.textContent = comments.length;
+
+            if (comments.length === 0) {
+                commentsList.innerHTML = `
+                    <div class="no-comments">
+                        <div class="no-comments-icon">💌</div>
+                        <h3>Aucun message pour le moment</h3>
+                        <p>Soyez le premier à laisser un message aux mariés !</p>
+                    </div>
+                `;
+                return;
+            }
+
+            commentsList.innerHTML = '';
+
+            // Trier par date (plus récent en bas pour faciliter la lecture)
+            comments.sort((a, b) => a.timestamp - b.timestamp);
+
+            comments.forEach(comment => {
+                const card = createCommentCard(comment);
+                commentsList.appendChild(card);
+            });
+        }
+
+        // Créer une carte de commentaire
+        function createCommentCard(comment) {
+            const card = document.createElement('div');
+            card.className = 'comment-card';
+
+            const initials = comment.nom.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            const time = formatDate(comment.timestamp);
+
+            const deleteBtn = isAdmin ? `
+                <button class="delete-comment-btn" onclick="deleteComment(${comment.id})">
+                    🗑️ Supprimer
+                </button>
+            ` : '';
+
+            card.innerHTML = `
+                <div class="comment-header">
+                    <div class="comment-author">
+                        <div class="comment-avatar">${initials}</div>
+                        <div>
+                            <div class="comment-author-name">${comment.nom}</div>
+                            <div class="comment-time">⏰ ${time}</div>
+                        </div>
+                    </div>
+                    ${deleteBtn}
+                </div>
+                <div class="comment-message">${escapeHtml(comment.message)}</div>
+            `;
+
+            return card;
+        }
+
+        // Supprimer un commentaire (admin uniquement)
+        async function deleteComment(commentId) {
+            if (!confirm('Supprimer ce commentaire ?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/commentaires/${commentId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await loadComments();
+                } else {
+                    alert('❌ Erreur lors de la suppression');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        // Formater la date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMinutes = Math.floor((now - date) / 60000);
+
+            if (diffMinutes < 1) return "À l'instant";
+            if (diffMinutes < 60) return `Il y a ${diffMinutes} min`;
+            if (diffMinutes < 1440) {
+                const hours = Math.floor(diffMinutes / 60);
+                return `Il y a ${hours}h`;
+            }
+
+            return date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Échapper le HTML pour éviter les injections
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Rafraîchir automatiquement
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                loadComments();
+            }, 15000); // Toutes les 15 secondes
+        }
+
+        // Arrêter le rafraîchissement
+        window.addEventListener('beforeunload', () => {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Commentaires chargée');
+
+            const user = checkAuth();
+            if (!user) return;
+
+            const token = sessionStorage.getItem('authToken');
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+
+            await checkCommentAuth();
+
+            console.log('✅ Page initialisée');
+        });
+    </script>
+</body>
+</html>

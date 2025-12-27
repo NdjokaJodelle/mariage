@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu du Mariage</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">🍽️</div>
+            <h1>Menu du Jour</h1>
+            <p class="subtitle">Découvrez les délices qui vous attendent</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <div id="menuContent">
+            <div class="loading" style="text-align: center; padding: 40px;">
+                <p>🔄 Chargement du menu...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des catégories du menu
+        const MENU_CATEGORIES = [
+            {
+                folder: "Cocktail_de_bienvenue",
+                title: "🥂 Cocktail de Bienvenue",
+                icon: "🥂"
+            },
+            {
+                folder: "Entrees",
+                title: "🥗 Entrées",
+                icon: "🥗"
+            },
+            {
+                folder: "Plats_principaux",
+                title: "🍖 Plats Principaux",
+                icon: "🍖"
+            },
+            {
+                folder: "Accompagnements",
+                title: "🥔 Accompagnements",
+                icon: "🥔"
+            },
+            {
+                folder: "Desserts",
+                title: "🍰 Desserts",
+                icon: "🍰"
+            },
+            {
+                folder: "Boissons",
+                title: "🍷 Boissons",
+                icon: "🍷"
+            }
+        ];
+
+        // Fonction pour vérifier l'authentification
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        // Fonction pour convertir le nom de fichier en nom lisible
+        function formatDishName(filename) {
+            // Enlever l'extension .png
+            let name = filename.replace('.png', '');
+            
+            // Remplacer les underscores par des espaces
+            name = name.replace(/_/g, ' ');
+            
+            // Mettre la première lettre de chaque mot en majuscule
+            name = name.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            
+            return name;
+        }
+
+        // Fonction pour charger les images d'un dossier
+        async function loadImagesFromFolder(folderPath) {
+            try {
+                // Liste des images à chercher (vous devrez adapter selon vos fichiers réels)
+                // Cette approche nécessite de connaître les noms à l'avance
+                // OU d'avoir un fichier index.json dans chaque dossier
+                
+                // Tentative de chargement d'un fichier index
+                const indexPath = `${folderPath}/index.json`;
+                const response = await fetch(indexPath);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.images || [];
+                } else {
+                    // Fallback : retourner un tableau vide si pas d'index
+                    console.warn(`Pas d'index.json trouvé pour ${folderPath}`);
+                    return [];
+                }
+            } catch (error) {
+                console.error(`Erreur de chargement pour ${folderPath}:`, error);
+                return [];
+            }
+        }
+
+        // Fonction pour créer une carte de plat
+        function createDishCard(imageName, folderPath) {
+            const card = document.createElement('div');
+            card.className = 'grid-item';
+            
+            const imagePath = `${folderPath}/${imageName}`;
+            const dishName = formatDishName(imageName);
+            
+            card.innerHTML = `
+                <img src="${imagePath}" 
+                     alt="${dishName}" 
+                     onerror="this.style.display='none'; this.nextElementSibling.innerHTML='<p style=&quot;padding:20px;text-align:center;color:#999;&quot;>📷 Image non disponible</p>';">
+                <div class="grid-item-content">
+                    <h3>${dishName}</h3>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Fonction pour créer une section de menu
+        async function createMenuSection(category) {
+            const section = document.createElement('div');
+            section.className = 'content-card';
+            
+            const title = document.createElement('h2');
+            title.textContent = category.title;
+            section.appendChild(title);
+            
+            const grid = document.createElement('div');
+            grid.className = 'grid-container';
+            
+            const folderPath = `menu/${category.folder}`;
+            const images = await loadImagesFromFolder(folderPath);
+            
+            if (images.length === 0) {
+                // Message si aucune image
+                const emptyMessage = document.createElement('p');
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.color = '#999';
+                emptyMessage.style.padding = '20px';
+                emptyMessage.textContent = 'Aucun plat disponible dans cette catégorie pour le moment.';
+                section.appendChild(emptyMessage);
+            } else {
+                images.forEach(imageName => {
+                    const card = createDishCard(imageName, folderPath);
+                    grid.appendChild(card);
+                });
+                section.appendChild(grid);
+            }
+            
+            return section;
+        }
+
+        // Fonction pour afficher le menu complet
+        async function renderMenu() {
+            const container = document.getElementById('menuContent');
+            container.innerHTML = '';
+            
+            // Ajouter une introduction
+            const intro = document.createElement('div');
+            intro.className = 'content-card';
+            intro.innerHTML = `
+                <h2>Un festin pour célébrer notre union</h2>
+                <p>Nous avons préparé avec soin un menu raffiné pour régaler vos papilles. 
+                Chaque plat a été sélectionné avec amour pour faire de cette journée un moment inoubliable.</p>
+                <p><strong>Note :</strong> Si vous avez des allergies ou des préférences alimentaires, 
+                n'hésitez pas à en informer le personnel.</p>
+            `;
+            container.appendChild(intro);
+            
+            // Ajouter chaque section du menu
+            for (const category of MENU_CATEGORIES) {
+                const section = await createMenuSection(category);
+                container.appendChild(section);
+            }
+            
+            // Message de fin
+            const outro = document.createElement('div');
+            outro.className = 'content-card';
+            outro.style.textAlign = 'center';
+            outro.innerHTML = `
+                <h2>Bon appétit ! 🎉</h2>
+                <p>Nous espérons que vous apprécierez ce repas autant que nous avons pris plaisir à le préparer pour vous.</p>
+            `;
+            container.appendChild(outro);
+        }
+
+        // Initialisation de la page
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Menu chargée');
+            
+            // Vérifier l'authentification
+            const user = checkAuth();
+            if (!user) {
+                return;
+            }
+            
+            // Configurer le bouton retour avec le token
+            const token = sessionStorage.getItem('authToken');
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            console.log('👤 Utilisateur:', user.name);
+            
+            // Afficher le menu
+            await renderMenu();
+            
+            console.log('✅ Menu affiché');
+        });
+    </script>
+</body>
+</html>

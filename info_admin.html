@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Informations - Admin</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        .admin-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h2 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .alert-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .alerts-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .alert-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #e74c3c;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 15px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-message {
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .alert-time {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .no-alerts {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .char-counter {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">⚙️</div>
+            <h1>Gestion des Informations</h1>
+            <p class="subtitle">Publiez des alertes en temps réel pour tous les invités</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <div class="admin-header">
+            <h2>👑 Mode Administrateur</h2>
+            <p>Les alertes publiées ici seront visibles instantanément sur la page Info de tous les invités.</p>
+        </div>
+
+        <div id="successMsg" class="success-msg"></div>
+
+        <!-- Formulaire d'ajout d'alerte -->
+        <div class="alert-form">
+            <h2 style="margin-bottom: 20px;">📢 Nouvelle Alerte</h2>
+            
+            <div class="form-group">
+                <label for="alertMessage">Message de l'alerte</label>
+                <textarea 
+                    id="alertMessage" 
+                    placeholder="Ex: À votre attention, les mariés arriveront dans 10 minutes !"
+                    maxlength="500"></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span> / 500 caractères
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>💡 Exemples de messages :</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                    <button class="btn-secondary" style="flex: none; padding: 10px 15px; font-size: 0.9em;" onclick="setExample('Les mariés seront là dans 10 minutes !')">
+                        ⏰ Arrivée des mariés
+                    </button>
+                    <button class="btn-secondary" style="flex: none; padding: 10px 15px; font-size: 0.9em;" onclick="setExample('Changement dans l\'ordre du jour : le buffet de minuit sera servi à 23h30')">
+                        📅 Changement programme
+                    </button>
+                    <button class="btn-secondary" style="flex: none; padding: 10px 15px; font-size: 0.9em;" onclick="setExample('Les navettes partiront dans 30 minutes depuis l\'entrée principale')">
+                        🚌 Info navettes
+                    </button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="publishAlert()">
+                    ✅ Publier l'alerte
+                </button>
+                <button class="btn btn-secondary" onclick="clearForm()">
+                    🗑️ Effacer
+                </button>
+            </div>
+        </div>
+
+        <!-- Liste des alertes actives -->
+        <div class="alerts-list">
+            <h2 style="margin-bottom: 20px;">📋 Alertes Actives (<span id="alertCount">0</span>)</h2>
+            <div id="alertsList">
+                <div class="no-alerts">Aucune alerte publiée pour le moment</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour vérifier l'authentification admin
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            const userData = JSON.parse(user);
+            
+            if (userData.role !== 'admin') {
+                alert('❌ Accès refusé : cette page est réservée aux administrateurs');
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            return userData;
+        }
+
+        // Compteur de caractères
+        const alertMessage = document.getElementById('alertMessage');
+        const charCount = document.getElementById('charCount');
+
+        alertMessage.addEventListener('input', () => {
+            charCount.textContent = alertMessage.value.length;
+        });
+
+        // Fonction pour définir un exemple
+        function setExample(text) {
+            alertMessage.value = text;
+            charCount.textContent = text.length;
+            alertMessage.focus();
+        }
+
+        // Fonction pour effacer le formulaire
+        function clearForm() {
+            alertMessage.value = '';
+            charCount.textContent = '0';
+        }
+
+        // Fonction pour afficher un message de succès
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.textContent = message;
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Fonction pour charger les alertes depuis l'API Python
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/api/info', {
+                    cache: "no-store"
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Alertes chargées:', data.alerts.length);
+                    return data.alerts || [];
+                }
+            } catch (error) {
+                console.log('⚠️ Impossible de charger les alertes:', error);
+            }
+            return [];
+        }
+
+        // Fonction pour publier une alerte
+        async function publishAlert() {
+            const message = alertMessage.value.trim();
+            
+            if (!message) {
+                alert('⚠️ Veuillez saisir un message');
+                return;
+            }
+            
+            if (message.length > 500) {
+                alert('⚠️ Le message est trop long (max 500 caractères)');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/info/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                if (response.ok) {
+                    showSuccess('✅ Alerte publiée avec succès !');
+                    clearForm();
+                    await displayAlerts();
+                } else {
+                    alert('❌ Erreur lors de la publication');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion au serveur');
+            }
+        }
+
+        // Fonction pour supprimer une alerte
+        async function deleteAlert(alertId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette alerte ?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/info/${alertId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showSuccess('🗑️ Alerte supprimée');
+                    await displayAlerts();
+                } else {
+                    alert('❌ Erreur lors de la suppression');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        // Fonction pour formater la date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('fr-FR', { 
+                day: '2-digit', 
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        // Fonction pour afficher les alertes
+        async function displayAlerts() {
+            const alerts = await loadAlerts();
+            const alertsList = document.getElementById('alertsList');
+            const alertCount = document.getElementById('alertCount');
+            
+            alertCount.textContent = alerts.length;
+            
+            if (alerts.length === 0) {
+                alertsList.innerHTML = '<div class="no-alerts">Aucune alerte publiée pour le moment</div>';
+                return;
+            }
+            
+            alertsList.innerHTML = '';
+            
+            // Trier par date décroissante
+            alerts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            alerts.forEach(alert => {
+                const alertItem = document.createElement('div');
+                alertItem.className = 'alert-item';
+                alertItem.innerHTML = `
+                    <div class="alert-content">
+                        <div class="alert-message">${alert.message}</div>
+                        <div class="alert-time">📅 Publié le ${formatDate(alert.timestamp)}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteAlert(${alert.id})">
+                        🗑️ Supprimer
+                    </button>
+                `;
+                alertsList.appendChild(alertItem);
+            });
+        }
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Info Admin chargée');
+            
+            const user = checkAuth();
+            if (!user) return;
+            
+            const token = sessionStorage.getItem('authToken');
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            console.log('👤 Admin:', user.name);
+            
+            await displayAlerts();
+            
+            console.log('✅ Page admin initialisée');
+        });
+    </script>
+</body>
+</html>

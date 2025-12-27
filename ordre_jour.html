@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordre du Jour - Mariage</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">📅</div>
+            <h1>Ordre du Jour</h1>
+            <p class="subtitle">Le programme de notre journée magique</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <div class="content-card">
+            <h2>Déroulement de la journée</h2>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 30px;">
+                Suivez le fil de cette journée exceptionnelle
+            </p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">14:00</div>
+                    <div class="timeline-content">
+                        <h3>🚗 Arrivée des invités</h3>
+                        <p>Accueil et installation dans la salle de réception</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">14:30</div>
+                    <div class="timeline-content">
+                        <h3>💒 Cérémonie</h3>
+                        <p>Cérémonie de mariage - Échange des vœux</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">15:30</div>
+                    <div class="timeline-content">
+                        <h3>📸 Photos officielles</h3>
+                        <p>Séance photo avec les mariés, la famille et les témoins</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">16:00</div>
+                    <div class="timeline-content">
+                        <h3>🥂 Cocktail de bienvenue</h3>
+                        <p>Apéritif et amuse-bouches dans les jardins</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">17:30</div>
+                    <div class="timeline-content">
+                        <h3>🪑 Installation à table</h3>
+                        <p>Les invités rejoignent leur table pour le repas</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">18:00</div>
+                    <div class="timeline-content">
+                        <h3>🍽️ Dîner de gala</h3>
+                        <p>Repas gastronomique en plusieurs services</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">20:30</div>
+                    <div class="timeline-content">
+                        <h3>🎤 Discours et toasts</h3>
+                        <p>Mots des témoins, parents et proches</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">21:00</div>
+                    <div class="timeline-content">
+                        <h3>🍰 Pièce montée</h3>
+                        <p>Découpe du gâteau et desserts</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">21:30</div>
+                    <div class="timeline-content">
+                        <h3>💃 Ouverture du bal</h3>
+                        <p>Première danse des mariés</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">22:00</div>
+                    <div class="timeline-content">
+                        <h3>🎉 Soirée dansante</h3>
+                        <p>Fête et danse jusqu'au bout de la nuit !</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">00:00</div>
+                    <div class="timeline-content">
+                        <h3>🌙 Buffet de minuit</h3>
+                        <p>Collation sucrée et salée pour reprendre des forces</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">02:00</div>
+                    <div class="timeline-content">
+                        <h3>🎊 Fin de soirée</h3>
+                        <p>Départ progressif des invités - Merci d'être venus !</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+            <h3>📌 Informations importantes</h3>
+            <ul style="line-height: 2; color: #856404;">
+                <li>La ponctualité est appréciée pour ne rien manquer de la cérémonie</li>
+                <li>Un vestiaire est à votre disposition</li>
+                <li>N'oubliez pas votre appareil photo pour immortaliser ces moments</li>
+                <li>Un espace enfants est prévu avec animations</li>
+                <li>Navettes disponibles en fin de soirée (voir section Info)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour vérifier l'authentification
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        // Initialisation de la page
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 Page Ordre du Jour chargée');
+            
+            // Vérifier l'authentification
+            const user = checkAuth();
+            if (!user) {
+                return;
+            }
+            
+            // Configurer le bouton retour avec le token
+            const token = sessionStorage.getItem('authToken');
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            console.log('👤 Utilisateur:', user.name);
+            console.log('✅ Programme affiché');
+        });
+    </script>
+</body>
+</html>

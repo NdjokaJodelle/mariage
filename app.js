@@ -38,6 +38,13 @@ const TABS_CONFIG = {
             icon: 'ℹ️',
             description: 'Informations pratiques',
             page: 'info.html'
+        },
+        {
+            id: 'commentaire',
+            title: 'Commentaires',
+            icon: '💬',
+            description: 'Livre d\'or et messages',
+            page: 'commentaire.html'
         }
     ],
     // Onglets SUPPLÉMENTAIRES pour les administrateurs
@@ -87,6 +94,13 @@ const TABS_CONFIG = {
             description: 'Gestion des médias',
             page: 'media_admin.html',
             badge: 'ADMIN'
+        },
+        {
+            id: 'commentaire',
+            title: 'Commentaires',
+            icon: '💬',
+            description: 'Livre d\'or et messages',
+            page: 'commentaire.html'
         }
     ]
 };

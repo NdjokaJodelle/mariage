@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations - Mariage</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        .alert-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(238, 90, 111, 0.3);
+            animation: pulse-alert 2s ease-in-out infinite;
+        }
+
+        .alert-section h2 {
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border-left: 4px solid white;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-time {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .alert-message {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .no-alerts {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+        }
+
+        @keyframes pulse-alert {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(238, 90, 111, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(238, 90, 111, 0.5);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">ℹ️</div>
+            <h1>Informations Pratiques</h1>
+            <p class="subtitle">Tout ce qu'il faut savoir pour cette journée</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <!-- Section des alertes en temps réel -->
+        <div id="alertsSection" style="display: none;">
+            <div class="alert-section">
+                <h2>
+                    <span style="font-size: 1.5em;">🔔</span>
+                    Alertes & Annonces
+                </h2>
+                <div id="alertsList">
+                    <!-- Les alertes seront chargées ici -->
+                </div>
+            </div>
+        </div>
+
+        <div id="infoContent">
+            <!-- Le contenu sera chargé dynamiquement -->
+        </div>
+    </div>
+
+    <script>
+        // Informations statiques par défaut
+        const DEFAULT_INFO = [
+            {
+                id: 'lieu',
+                icon: '📍',
+                title: 'Lieu de réception',
+                content: `
+                    <strong>Domaine des Roses</strong><br>
+                    123 Avenue des Fleurs<br>
+                    75000 Paris, France<br><br>
+                    <a href="https://maps.google.com" target="_blank" style="color: #e74c3c;">📍 Voir sur Google Maps</a>
+                `
+            },
+            {
+                id: 'parking',
+                icon: '🚗',
+                title: 'Stationnement',
+                content: `
+                    Un parking gratuit de 150 places est disponible sur place.<br>
+                    Entrée par l'avenue principale.<br>
+                    Service de voiturier disponible de 14h à 3h du matin.
+                `
+            },
+            {
+                id: 'transport',
+                icon: '🚌',
+                title: 'Transports',
+                content: `
+                    <strong>En transports en commun :</strong><br>
+                    • Métro ligne 7, arrêt "Mairie"<br>
+                    • Bus 42 et 67<br><br>
+                    <strong>Navettes :</strong><br>
+                    Des navettes seront disponibles :<br>
+                    • Départ : 1h00 et 2h00<br>
+                    • Destination : Gare centrale et Hôtel Ibis
+                `
+            },
+            {
+                id: 'hebergement',
+                icon: '🏨',
+                title: 'Hébergement',
+                content: `
+                    <strong>Hôtels recommandés à proximité :</strong><br><br>
+                    📍 <strong>Hôtel Ibis Centre</strong> - 2km<br>
+                    Tél : 01 23 45 67 89<br><br>
+                    📍 <strong>Best Western Rose</strong> - 3km<br>
+                    Tél : 01 23 45 67 90
+                `
+            },
+            {
+                id: 'dress_code',
+                icon: '👔',
+                title: 'Code vestimentaire',
+                content: `
+                    <strong>Tenue de soirée élégante</strong><br><br>
+                    • Messieurs : Costume / Smoking<br>
+                    • Mesdames : Robe de cocktail / Soirée<br><br>
+                    💡 <em>Conseil :</em> Prévoyez des chaussures confortables pour danser !
+                `
+            },
+            {
+                id: 'contact',
+                icon: '📞',
+                title: 'Contact d\'urgence',
+                content: `
+                    <strong>Organisateurs :</strong><br>
+                    Marie : 06 12 34 56 78<br>
+                    Jean : 06 98 76 54 32
+                `
+            }
+        ];
+
+        let alertCheckInterval = null;
+
+        // Fonction pour vérifier l'authentification
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        // Fonction pour charger les alertes depuis l'API Python
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/api/info', {
+                    cache: "no-store"
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Alertes chargées:', data.alerts.length);
+                    return data.alerts || [];
+                }
+            } catch (error) {
+                console.log('⚠️ Impossible de charger les alertes:', error);
+            }
+            return [];
+        }
+
+        // Fonction pour formater la date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMinutes = Math.floor((now - date) / 60000);
+            
+            if (diffMinutes < 1) {
+                return "À l'instant";
+            } else if (diffMinutes < 60) {
+                return `Il y a ${diffMinutes} min`;
+            } else if (diffMinutes < 1440) {
+                const hours = Math.floor(diffMinutes / 60);
+                return `Il y a ${hours}h`;
+            } else {
+                return date.toLocaleDateString('fr-FR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }
+        }
+
+        // Fonction pour afficher les alertes
+        async function displayAlerts() {
+            const alerts = await loadAlerts();
+            const alertsSection = document.getElementById('alertsSection');
+            const alertsList = document.getElementById('alertsList');
+            
+            if (alerts.length === 0) {
+                alertsSection.style.display = 'none';
+                return;
+            }
+            
+            alertsSection.style.display = 'block';
+            alertsList.innerHTML = '';
+            
+            // Trier par date décroissante
+            alerts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            alerts.forEach(alert => {
+                const alertItem = document.createElement('div');
+                alertItem.className = 'alert-item';
+                alertItem.innerHTML = `
+                    <div class="alert-message">${alert.message}</div>
+                    <div class="alert-time">
+                        <span>⏰</span>
+                        <span>${formatDate(alert.timestamp)}</span>
+                    </div>
+                `;
+                alertsList.appendChild(alertItem);
+            });
+        }
+
+        // Fonction pour afficher les informations statiques
+        async function displayInfo() {
+            const container = document.getElementById('infoContent');
+            container.innerHTML = '';
+
+            // Afficher chaque section
+            DEFAULT_INFO.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <h2>
+                        <span style="font-size: 1.5em; margin-right: 10px;">${item.icon}</span>
+                        ${item.title}
+                    </h2>
+                    <div style="color: #555; line-height: 1.8; margin-top: 15px;">
+                        ${item.content}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Carte de remerciement
+            const thanksCard = document.createElement('div');
+            thanksCard.className = 'content-card';
+            thanksCard.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            thanksCard.style.color = 'white';
+            thanksCard.style.textAlign = 'center';
+            thanksCard.innerHTML = `
+                <h2 style="color: white;">💕 Merci d'être avec nous</h2>
+                <p style="font-size: 1.1em; color: rgba(255,255,255,0.9);">
+                    Votre présence rend cette journée encore plus spéciale.<br>
+                    Nous avons hâte de célébrer avec vous !
+                </p>
+            `;
+            container.appendChild(thanksCard);
+        }
+
+        // Rafraîchir les alertes toutes les 10 secondes
+        function startAlertPolling() {
+            displayAlerts();
+            
+            alertCheckInterval = setInterval(() => {
+                displayAlerts();
+            }, 10000);
+        }
+
+        // Arrêter le polling
+        window.addEventListener('beforeunload', () => {
+            if (alertCheckInterval) {
+                clearInterval(alertCheckInterval);
+            }
+        });
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Info chargée');
+            
+            const user = checkAuth();
+            if (!user) return;
+            
+            const token = sessionStorage.getItem('authToken');
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            console.log('👤 Utilisateur:', user.name);
+            
+            await displayAlerts();
+            startAlertPolling();
+            await displayInfo();
+            
+            console.log('✅ Informations affichées');
+        });
+    </script>
+</body>
+</html>

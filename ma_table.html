@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Table - Mariage</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        .table-hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(142, 68, 173, 0.1) 100%);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .table-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 8px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .table-name {
+            font-size: 3em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .table-subtitle {
+            font-size: 1.3em;
+            color: #7f8c8d;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .guests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .guest-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .guest-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .guest-name {
+            font-size: 1.4em;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guest-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .info-item .icon {
+            width: 25px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: #f8f9fa;
+            color: #e74c3c;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .guests-count {
+            text-align: center;
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .table-name {
+                font-size: 2em;
+            }
+            
+            .guests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">🪑</div>
+            <h1>Ma Table</h1>
+            <p class="subtitle">Découvrez les personnes avec qui vous partagerez cette soirée</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <div id="tableContent">
+            <div class="loading" style="text-align: center; padding: 40px;">
+                <p>🔄 Chargement de votre table...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour vérifier l'authentification
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        // Fonction pour charger les utilisateurs
+        async function loadUsers() {
+            try {
+                const response = await fetch('utilisateur.json', {
+                    cache: "no-store"
+                });
+                if (!response.ok) {
+                    throw new Error("Impossible de charger utilisateur.json");
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        // Fonction pour créer une carte d'invité
+        function createGuestCard(guest, index) {
+            const card = document.createElement('div');
+            card.className = 'guest-card';
+            
+            let infoHTML = '';
+            
+            // Nom (toujours présent)
+            infoHTML += `
+                <div class="guest-name">
+                    <span style="font-size: 1.5em;">👤</span>
+                    ${guest.nom}
+                </div>
+                <div class="guest-info">
+            `;
+            
+            // Statut (relation avec les mariés)
+            if (guest.statu) {
+                infoHTML += `
+                    <div class="info-item">
+                        <span class="icon">💝</span>
+                        <span><strong>Lien :</strong> ${guest.statu}</span>
+                    </div>
+                `;
+            }
+            
+            // Situation familiale
+            if (guest.situation) {
+                infoHTML += `
+                    <div class="info-item">
+                        <span class="icon">💍</span>
+                        <span><strong>Situation :</strong> ${guest.situation}</span>
+                    </div>
+                `;
+            }
+            
+            // Profession
+            if (guest.profession) {
+                infoHTML += `
+                    <div class="info-item">
+                        <span class="icon">💼</span>
+                        <span><strong>Profession :</strong> ${guest.profession}</span>
+                    </div>
+                `;
+            }
+            
+            // Ville
+            if (guest.ville) {
+                infoHTML += `
+                    <div class="info-item">
+                        <span class="icon">📍</span>
+                        <span><strong>Ville :</strong> ${guest.ville}</span>
+                    </div>
+                `;
+            }
+            
+            infoHTML += '</div>';
+            
+            card.innerHTML = infoHTML;
+            return card;
+        }
+
+        // Fonction pour afficher la table
+        async function displayTable(token) {
+            const container = document.getElementById('tableContent');
+            container.innerHTML = '';
+
+            // Charger tous les utilisateurs
+            const allUsers = await loadUsers();
+
+            if (!allUsers || !allUsers[token]) {
+                container.innerHTML = `
+                    <div class="content-card" style="text-align: center;">
+                        <h2>❓ Table non trouvée</h2>
+                        <p>Impossible de charger les informations de votre table.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableData = allUsers[token];
+
+            // Vérifier que des invités sont présents
+            if (!tableData.invites || tableData.invites.length === 0) {
+                container.innerHTML = `
+                    <div class="content-card" style="text-align: center;">
+                        <h2>📋 Table en préparation</h2>
+                        <p>Les informations de votre table seront bientôt disponibles.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // En-tête de la table avec image
+            const hero = document.createElement('div');
+            hero.className = 'table-hero';
+            
+            const imagePath = `images/${tableData.image}`;
+            
+            hero.innerHTML = `
+                <img src="${imagePath}" 
+                     alt="${tableData.name}" 
+                     class="table-image"
+                     onerror="this.src='utilisateur/${tableData.image}'">
+                <div class="table-name">${tableData.name}</div>
+                <div class="table-subtitle">Votre table pour cette magnifique soirée</div>
+            `;
+            container.appendChild(hero);
+
+            // Compteur d'invités
+            const counter = document.createElement('div');
+            counter.className = 'guests-count';
+            counter.innerHTML = `
+                <strong>🌸 ${tableData.invites.length} invité${tableData.invites.length > 1 ? 's' : ''} à cette table</strong>
+            `;
+            container.appendChild(counter);
+
+            // Section des invités
+            const guestsSection = document.createElement('div');
+            guestsSection.className = 'content-card';
+            guestsSection.innerHTML = `
+                <h2 style="text-align: center; margin-bottom: 25px;">
+                    👥 Les invités de votre table
+                </h2>
+            `;
+
+            const guestsGrid = document.createElement('div');
+            guestsGrid.className = 'guests-grid';
+
+            tableData.invites.forEach((guest, index) => {
+                const card = createGuestCard(guest, index);
+                guestsGrid.appendChild(card);
+            });
+
+            guestsSection.appendChild(guestsGrid);
+            container.appendChild(guestsSection);
+
+            // Message de bienvenue
+            const welcomeCard = document.createElement('div');
+            welcomeCard.className = 'content-card';
+            welcomeCard.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            welcomeCard.style.color = 'white';
+            welcomeCard.style.textAlign = 'center';
+            welcomeCard.innerHTML = `
+                <h2 style="color: white;">🎉 Bon à savoir</h2>
+                <p style="font-size: 1.1em; line-height: 1.8; color: rgba(255,255,255,0.95);">
+                    N'hésitez pas à faire connaissance avec vos voisins de table !<br>
+                    Cette soirée est l'occasion de créer de beaux souvenirs ensemble.<br><br>
+                    <strong>💃 La piste de danse vous attend dès 21h30 !</strong>
+                </p>
+            `;
+            container.appendChild(welcomeCard);
+        }
+
+        // Initialisation de la page
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Ma Table chargée');
+            
+            // Vérifier l'authentification
+            const user = checkAuth();
+            if (!user) {
+                return;
+            }
+
+            const token = sessionStorage.getItem('authToken');
+            
+            // Configurer le bouton retour avec le token
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            console.log('👤 Table:', user.name);
+            
+            // Afficher la table
+            await displayTable(token);
+            
+            console.log('✅ Table affichée');
+        });
+    </script>
+</body>
+</html>
