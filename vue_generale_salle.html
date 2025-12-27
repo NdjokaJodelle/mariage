@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue générale de la salle - Mariage</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        /* Styles spécifiques à la page de vue générale */
+        .search-section {
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255, 248, 220, 0.5) 100%);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--royal-blue);
+            box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1);
+        }
+
+        .search-button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .search-results {
+            display: none;
+            background: rgba(0, 71, 171, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--dark-blue) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .stat-number {
+            font-size: 2.8em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: var(--light-gold);
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .table-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .table-card:hover::before {
+            left: 100%;
+        }
+
+        .table-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-gold);
+            border-color: var(--gold);
+        }
+
+        .table-card.highlight {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, var(--light-gold) 0%, var(--cream) 100%);
+            animation: pulse-alert 2s ease-in-out;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .table-image-small {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .table-info {
+            flex: 1;
+        }
+
+        .table-name-small {
+            font-size: 1.5em;
+            color: var(--royal-blue);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .table-count {
+            color: var(--text-light);
+            font-size: 0.95em;
+        }
+
+        .guests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guest-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(0, 71, 171, 0.03);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .guest-item:hover {
+            background: rgba(0, 71, 171, 0.08);
+            border-color: var(--gold);
+        }
+
+        .guest-item.highlight {
+            background: var(--light-gold);
+            border: 2px solid var(--gold);
+            animation: pulse 1s ease-in-out;
+        }
+
+        .guest-icon {
+            font-size: 1.2em;
+            filter: drop-shadow(1px 1px 2px rgba(0, 71, 171, 0.3));
+        }
+
+        .guest-details {
+            flex: 1;
+        }
+
+        .guest-name {
+            font-weight: bold;
+            color: var(--royal-blue);
+            margin-bottom: 3px;
+            font-size: 1.05em;
+        }
+
+        .guest-meta {
+            font-size: 0.85em;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--royal-blue);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+            color: var(--white);
+            border-color: var(--dark-gold);
+        }
+
+        @media (max-width: 768px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="icon">🏛️</div>
+            <h1>Vue générale de la salle</h1>
+            <p class="subtitle">Récapitulatif de toutes les tables et invités</p>
+            <a href="#" id="backButton" class="back-button">← Retour à l'accueil</a>
+        </div>
+
+        <!-- Section de recherche -->
+        <div class="search-section">
+            <h2 style="color: var(--royal-blue); margin-bottom: 20px;">🔍 Rechercher</h2>
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Rechercher une table ou un invité..."
+                    autocomplete="off"
+                >
+                <button class="search-button" onclick="performSearch()">Rechercher</button>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterAll()">Toutes les tables</button>
+                <button class="filter-btn" onclick="filterBySize('small')">Petites tables (≤6)</button>
+                <button class="filter-btn" onclick="filterBySize('large')">Grandes tables (>6)</button>
+            </div>
+
+            <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-label">📋 Total des tables</div>
+                <div class="stat-number" id="totalTables">-</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);">
+                <div class="stat-label">👥 Total des invités</div>
+                <div class="stat-number" id="totalGuests">-</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, var(--light-blue) 0%, var(--royal-blue) 100%);">
+                <div class="stat-label">📊 Moyenne par table</div>
+                <div class="stat-number" id="avgGuests">-</div>
+            </div>
+        </div>
+
+        <!-- Contenu des tables -->
+        <div id="tablesContent">
+            <div class="loading">
+                <p>📄 Chargement des tables...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allTablesData = [];
+        let currentFilter = 'all';
+
+        // Vérifier l'authentification admin
+        function checkAuth() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            const userData = JSON.parse(user);
+            if (userData.role !== 'admin') {
+                window.location.href = 'index.html';
+                return null;
+            }
+            return userData;
+        }
+
+        // Charger tous les utilisateurs
+        async function loadAllUsers() {
+            try {
+                const response = await fetch('utilisateur.json', {
+                    cache: "no-store"
+                });
+                if (!response.ok) {
+                    throw new Error("Impossible de charger utilisateur.json");
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        // Calculer les statistiques
+        function calculateStats(users) {
+            const tables = Object.values(users).filter(u => u.role === 'guest');
+            const totalTables = tables.length;
+            const totalGuests = tables.reduce((sum, table) => sum + (table.invites?.length || 0), 0);
+            const avgGuests = totalTables > 0 ? (totalGuests / totalTables).toFixed(1) : 0;
+
+            document.getElementById('totalTables').textContent = totalTables;
+            document.getElementById('totalGuests').textContent = totalGuests;
+            document.getElementById('avgGuests').textContent = avgGuests;
+        }
+
+        // Créer une carte de table
+        function createTableCard(token, tableData) {
+            const card = document.createElement('div');
+            card.className = 'table-card';
+            card.dataset.token = token;
+            card.dataset.guestsCount = tableData.invites?.length || 0;
+
+            const imagePath = `images/${tableData.image}`;
+            
+            let guestsHTML = '';
+            if (tableData.invites && tableData.invites.length > 0) {
+                guestsHTML = tableData.invites.map(guest => `
+                    <div class="guest-item" data-guest-name="${guest.nom.toLowerCase()}">
+                        <span class="guest-icon">👤</span>
+                        <div class="guest-details">
+                            <div class="guest-name">${guest.nom}</div>
+                            <div class="guest-meta">
+                                ${guest.statu ? guest.statu : ''} 
+                                ${guest.ville ? '• ' + guest.ville : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                guestsHTML = '<div class="no-results">Aucun invité pour cette table</div>';
+            }
+
+            card.innerHTML = `
+                <div class="table-header">
+                    <img src="${imagePath}" 
+                         alt="${tableData.name}" 
+                         class="table-image-small"
+                         onerror="this.src='utilisateur/${tableData.image}'">
+                    <div class="table-info">
+                        <div class="table-name-small">${tableData.name}</div>
+                        <div class="table-count">
+                            🌸 ${tableData.invites?.length || 0} invité${(tableData.invites?.length || 0) > 1 ? 's' : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="guests-list">
+                    ${guestsHTML}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Afficher toutes les tables
+        function displayAllTables(users) {
+            const container = document.getElementById('tablesContent');
+            container.innerHTML = '';
+
+            const tablesGrid = document.createElement('div');
+            tablesGrid.className = 'tables-grid';
+            tablesGrid.id = 'tablesGrid';
+
+            allTablesData = [];
+
+            for (const [token, userData] of Object.entries(users)) {
+                if (userData.role === 'guest') {
+                    allTablesData.push({ token, data: userData });
+                    const card = createTableCard(token, userData);
+                    tablesGrid.appendChild(card);
+                }
+            }
+
+            container.appendChild(tablesGrid);
+        }
+
+        // Fonction de recherche
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsDiv = document.getElementById('searchResults');
+            
+            if (!searchTerm) {
+                resultsDiv.classList.remove('active');
+                clearHighlights();
+                return;
+            }
+
+            // Rechercher dans les tables et invités
+            let results = [];
+            const tableCards = document.querySelectorAll('.table-card');
+            
+            clearHighlights();
+
+            tableCards.forEach(card => {
+                const tableName = card.querySelector('.table-name-small').textContent.toLowerCase();
+                const guestItems = card.querySelectorAll('.guest-item');
+                let tableMatches = tableName.includes(searchTerm);
+                let guestMatches = [];
+
+                guestItems.forEach(item => {
+                    const guestName = item.dataset.guestName;
+                    if (guestName.includes(searchTerm)) {
+                        guestMatches.push(item.querySelector('.guest-name').textContent);
+                        item.classList.add('highlight');
+                    }
+                });
+
+                if (tableMatches || guestMatches.length > 0) {
+                    card.classList.add('highlight');
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    results.push({
+                        table: card.querySelector('.table-name-small').textContent,
+                        matches: guestMatches.length,
+                        guests: guestMatches
+                    });
+                }
+            });
+
+            // Afficher les résultats
+            if (results.length > 0) {
+                let resultsHTML = `<strong style="color: var(--royal-blue);">🎯 ${results.length} résultat${results.length > 1 ? 's' : ''} trouvé${results.length > 1 ? 's' : ''}</strong><br><br>`;
+                results.forEach(result => {
+                    resultsHTML += `<div style="margin-bottom: 12px; color: var(--text-dark);">
+                        <strong style="color: var(--royal-blue);">Table ${result.table}</strong>`;
+                    if (result.guests.length > 0) {
+                        resultsHTML += `: ${result.guests.join(', ')}`;
+                    }
+                    resultsHTML += `</div>`;
+                });
+                resultsDiv.innerHTML = resultsHTML;
+                resultsDiv.classList.add('active');
+            } else {
+                resultsDiv.innerHTML = '<strong style="color: var(--text-light);">❌ Aucun résultat trouvé</strong>';
+                resultsDiv.classList.add('active');
+            }
+        }
+
+        // Effacer les surlignages
+        function clearHighlights() {
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+        }
+
+        // Filtres
+        function filterAll() {
+            currentFilter = 'all';
+            updateFilterButtons(event.target);
+            document.querySelectorAll('.table-card').forEach(card => {
+                card.style.display = 'block';
+            });
+        }
+
+        function filterBySize(size) {
+            currentFilter = size;
+            updateFilterButtons(event.target);
+            document.querySelectorAll('.table-card').forEach(card => {
+                const guestsCount = parseInt(card.dataset.guestsCount);
+                if (size === 'small' && guestsCount <= 6) {
+                    card.style.display = 'block';
+                } else if (size === 'large' && guestsCount > 6) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function updateFilterButtons(activeBtn) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            activeBtn.classList.add('active');
+        }
+
+        // Recherche en temps réel
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    if (e.target.value.length >= 2) {
+                        performSearch();
+                    } else if (e.target.value.length === 0) {
+                        clearHighlights();
+                        document.getElementById('searchResults').classList.remove('active');
+                    }
+                });
+
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+        });
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('📄 Page Vue générale de la salle chargée');
+            
+            // Vérifier l'authentification admin
+            const user = checkAuth();
+            if (!user) {
+                return;
+            }
+
+            const token = sessionStorage.getItem('authToken');
+            
+            // Configurer le bouton retour
+            const backButton = document.getElementById('backButton');
+            if (backButton && token) {
+                backButton.href = `index.html?token=${token}`;
+            }
+            
+            // Charger toutes les données
+            const allUsers = await loadAllUsers();
+            
+            if (!allUsers) {
+                document.getElementById('tablesContent').innerHTML = `
+                    <div class="content-card" style="text-align: center;">
+                        <h2 style="color: var(--royal-blue);">❌ Erreur</h2>
+                        <p style="color: var(--text-dark);">Impossible de charger les données des tables.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculer et afficher les statistiques
+            calculateStats(allUsers);
+
+            // Afficher toutes les tables
+            displayAllTables(allUsers);
+            
+            console.log('✅ Vue générale affichée');
+        });
+    </script>
+</body>
+</html>

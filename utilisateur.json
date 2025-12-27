@@ -191,7 +191,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "camelia.webp"
+    "image": "camellia.webp"
   },
   "GUEST004": {
     "name": "Dahlia",
@@ -569,7 +569,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "frangipanier.webp"
+    "image": "frangipani.webp"
   },
   "GUEST010": {
     "name": "Gardénia",
@@ -1325,7 +1325,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "orchidée.webp"
+    "image": "orchidee.webp"
   },
   "GUEST022": {
     "name": "Pétunia",
@@ -1388,7 +1388,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "pétunia.webp"
+    "image": "petunia.webp"
   },
   "GUEST023": {
     "name": "Photinie",
@@ -1703,7 +1703,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "primevere.webp"
+    "image": "primevère.webp"
   },
   "GUEST028": {
     "name": "Renoncule persane",
@@ -1829,7 +1829,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "rose.webp"
+    "image": "roses.webp"
   },
   "GUEST030": {
     "name": "Sureau",
@@ -2207,7 +2207,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "alysse.webp" 
+    "image": "alysee.webp" 
   },
   "GUEST036": {
     "name": "Eschscholtzia",
@@ -3342,7 +3342,7 @@
         "ville": "Douala"
       }
     ],
-    "image": "napier_grass.webp"
+    "image": "napier _grass.webp"
   },
   "GUEST054": {
     "name": "Primule",
